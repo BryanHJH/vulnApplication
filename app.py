@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 # SQLite database setup
-conn = sqlite3.connect('instance/database.db')
+conn = sqlite3.connect('database.db')
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS users
              (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,13 +16,12 @@ c.execute('''CREATE TABLE IF NOT EXISTS users
              password TEXT NOT NULL)''')
 # Insert a user record
 c.execute("INSERT INTO users (username, password) VALUES ('admin', 'password')")
-c.execute("INSERT INTO users (username, password) VALUES ('bryan', 'bryan')")
 conn.commit()
 conn.close()
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return redirect('/login')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -30,7 +29,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        conn = sqlite3.connect('instance/database.db')
+        conn = sqlite3.connect('database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'")
         user = c.fetchone()
@@ -55,7 +54,7 @@ def otp():
             else:
                 return render_template('otp.html', error='Invalid OTP')
         else:
-            otp = str(random.randint(100, 999))
+            otp = str(random.randint(1000, 9999))
             session['otp'] = otp
             return render_template('otp.html', otp=otp)
     else:
@@ -78,4 +77,4 @@ def lookup():
         return redirect('/login')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(debug=True)
