@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lookup</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <h2>Reverse Lookup</h2>
+    <form method="POST" action="/lookup">
+        <label for="link">Enter Link:</label>
+        <input type="text" id="link" name="link" required><br>
+        <input type="submit" value="Lookup">
+    </form>
+    {% if output %}
+        <h3>Output:</h3>
+        <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>

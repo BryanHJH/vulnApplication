@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <h2>Command Execution</h2>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="/command">
+        <label for="command">Command:</label>
+        <input type="text" id="command" name="command" required><br>
+        <input type="submit" value="Execute">
+    </form>
+    {% if output %}
+        <h3>Output:</h3>
+        <pre>{{ output }}</pre>
+    {% endif %}
+    <br>
+    <a href="/otp">Generate OTP</a>
+    <a href="/lookup">Perform Reverse Lookup</a>
+</body>
+</html>
