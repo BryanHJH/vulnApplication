@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 # SQLite database setup
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('instance/database.db')
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS users
              (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +30,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('instance/database.db')
         c = conn.cursor()
         c.execute("SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'")
         user = c.fetchone()
