@@ -3,6 +3,7 @@ import sqlite3
 import subprocess
 import random
 import platform
+import shlex
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
@@ -54,7 +55,7 @@ def otp():
             else:
                 return render_template('otp.html', error='Invalid OTP')
         else:
-            otp = str(random.randint(1000, 9999))
+            otp = str(random.randint(100, 999))
             session['otp'] = otp
             return render_template('otp.html', otp=otp)
     else:
@@ -65,16 +66,20 @@ def lookup():
     if 'logged_in' in session:
         if request.method == 'POST':
             link = request.form['link']
-            if platform.system() == 'Windows':
-                command = f'nslookup {link}'
-            else:
-                command = f'dig {link}'
-            output = subprocess.check_output(command, shell=True, universal_newlines=True)
-            return render_template('lookup.html', username=session['username'], output=output)
+            
+            # Intentionally vulnerable command execution
+            command = f'nslookup {link}'
+            
+            try:
+                output = subprocess.check_output(command, shell=True, universal_newlines=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                output = e.output
+            
+            return render_template('lookup.html', username=session['username'], output=output, command=command)
         else:
             return render_template('lookup.html', username=session['username'])
     else:
         return redirect('/login')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
